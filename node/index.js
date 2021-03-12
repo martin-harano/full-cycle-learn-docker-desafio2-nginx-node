@@ -8,14 +8,24 @@ const config = {
     database:'nodedb'
 };
 const mysql = require('mysql')
-const connection = mysql.createConnection(config)
 
-const sql = `INSERT INTO people(name) values('Wesley')`
-connection.query(sql)
-connection.end()
 
+var insertName = function(param) {
+    var sqlreq = `INSERT INTO people(name) values('` + param + `')`
+    const connection = mysql.createConnection(config)
+    connection.query(sqlreq)
+    connection.end()
+}
 
 app.get('/', (req,res) => {
+
+    insertName('Martin Harano')
+
+    res.send('<h1>Full Cycle</h1>')
+})
+
+app.get('/:nameID', (req,res) => {
+    insertName(req.params.nameID)
     res.send('<h1>Full Cycle</h1>')
 })
 
