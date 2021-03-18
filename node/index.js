@@ -9,24 +9,39 @@ const config = {
 };
 const mysql = require('mysql')
 
-
-var insertName = function(param) {
-    var sqlreq = `INSERT INTO people(name) values('` + param + `')`
+function insertName(param) {
+    var sqlreq = `INSERT INTO people(name) values('` + param + `');`
     const connection = mysql.createConnection(config)
     connection.query(sqlreq)
+    connection.end()
+}
+
+function getNames(callback) {
+    var sqlreq = `SELECT name FROM people;`
+    const connection = mysql.createConnection(config)
+    connection.query(sqlreq, function(err, results, field) {
+        var names = ""
+        for(var i = 0; i < results.length; i++) {
+            names = names + results[i].name + '<br>' 
+        }
+        return callback(names)
+    });
     connection.end()
 }
 
 app.get('/', (req,res) => {
 
     insertName('Martin Harano')
-
-    res.send('<h1>Full Cycle</h1>')
+    getNames(function(names) {
+        res.send('Full Cycle Rocks!' + names)
+    });
 })
 
 app.get('/:nameID', (req,res) => {
     insertName(req.params.nameID)
-    res.send('<h1>Full Cycle</h1>')
+    getNames(function(names) {
+        res.send('Full Cycle Rocks!' + names)
+    });
 })
 
 app.listen(port, ()=> {
