@@ -12,8 +12,6 @@ services:
     volumes: 
       - ./node:/usr/src/app
     tty: true
-    ports: 
-      - "3000:3000"
     depends_on: 
        - db
 
@@ -33,7 +31,16 @@ services:
     networks: 
       - node-network
 
-    
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    image: martinharano/nginx:prod
+    container_name: nginx
+    networks: 
+      - node-network
+    ports: 
+      - "8080:80"
 
 networks: 
   node-network:
