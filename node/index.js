@@ -33,14 +33,14 @@ app.get('/', (req,res) => {
 
     insertName('Martin Harano')
     getNames(function(names) {
-        res.send('Full Cycle Rocks!' + names)
+        res.send('<h1>Full Cycle Rocks!</h1>' + names)
     });
 })
 
 app.get('/:nameID', (req,res) => {
     insertName(req.params.nameID)
     getNames(function(names) {
-        res.send('Full Cycle Rocks!' + names)
+        res.send('<h1>Full Cycle Rocks!</h1>' + names)
     });
 })
 
