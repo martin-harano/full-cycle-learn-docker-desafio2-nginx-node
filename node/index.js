@@ -9,16 +9,13 @@ const config = {
 };
 const mysql = require('mysql')
 
-function insertName(param) {
+function insertName(param, connection) {
     var sqlreq = `INSERT INTO people(name) values('` + param + `');`
-    const connection = mysql.createConnection(config)
     connection.query(sqlreq)
-    connection.end()
 }
 
-function getNames(callback) {
+function getNames(callback, connection) {
     var sqlreq = `SELECT name FROM people;`
-    const connection = mysql.createConnection(config)
     connection.query(sqlreq, function(err, results, field) {
         var names = ""
         for(var i = 0; i < results.length; i++) {
@@ -26,22 +23,24 @@ function getNames(callback) {
         }
         return callback(names)
     });
-    connection.end()
 }
 
 app.get('/', (req,res) => {
-
-    insertName('Martin Harano')
+    const connection = mysql.createConnection(config)
+    insertName('Martin Harano', connection)
     getNames(function(names) {
         res.send('<h1>Full Cycle Rocks!</h1>' + names)
-    });
+    },connection);
+    connection.end()
 })
 
 app.get('/:nameID', (req,res) => {
-    insertName(req.params.nameID)
+    const connection = mysql.createConnection(config)
+    insertName(req.params.nameID,connection)
     getNames(function(names) {
         res.send('<h1>Full Cycle Rocks!</h1>' + names)
-    });
+    },connection);
+    connection.end()
 })
 
 app.listen(port, ()=> {
